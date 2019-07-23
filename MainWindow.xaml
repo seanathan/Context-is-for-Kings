@@ -13,7 +13,7 @@
         <Rectangle x:Name="results_pane" Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="117" Margin="345,47,0,0" Stroke="Black" VerticalAlignment="Top" Width="395"/>
         <Button x:Name="make_slide" Content="Make Slide" HorizontalAlignment="Left" Margin="265,352,0,0" VerticalAlignment="Top" Width="75" Click="Make_slide_Click"/>
         <TextBlock x:Name="message_block" HorizontalAlignment="Left" Margin="10,393,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" Width="744"/>
-        <RichTextBox x:Name="body_text" HorizontalAlignment="Left" Height="247" Margin="10,75,0,0" VerticalAlignment="Top" Width="330">
+        <RichTextBox x:Name="body_text" HorizontalAlignment="Left" Height="247" Margin="10,75,0,0" VerticalAlignment="Top" Width="330" TextChanged="Body_text_TextChanged">
             <FlowDocument>
                 <Paragraph>
                     <Run Text="Body of the slide"/>
@@ -25,7 +25,8 @@
                     <Run Text="item 1 "/>
                 </Paragraph>
                 <Paragraph>
-                    <Run Text="thing 2"/>
+                    <Run FontWeight="Bold" Text="thing "/>
+                    <Run Text="2"/>
                 </Paragraph>
                 <Paragraph>
                     <Run/>
@@ -42,7 +43,7 @@
             </FlowDocument>
         </RichTextBox>
         <Button x:Name="SearchButton" Content="Search for Images" HorizontalAlignment="Left" Margin="10,327,0,0" VerticalAlignment="Top" Width="150" Click="Button_Click"/>
-        <DocumentViewer x:Name="doc_preview" HorizontalAlignment="Left" Margin="345,169,0,0" VerticalAlignment="Top" Height="250" Width="437"/>
+        <WebBrowser HorizontalAlignment="Left" Height="224" Margin="345,169,0,0" VerticalAlignment="Top" Width="395"/>
 
     </Grid>
 </Window>

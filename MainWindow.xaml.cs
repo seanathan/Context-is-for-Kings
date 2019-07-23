@@ -23,8 +23,6 @@ namespace Context_is_for_Kings
 	public partial class MainWindow : Window
 	{
 
-		private String searchString = "";
-
 		public MainWindow()
 		{
 			InitializeComponent();
@@ -39,21 +37,13 @@ namespace Context_is_for_Kings
 		private void Embolden_Click(object sender, RoutedEventArgs e)
 		{
 			var sel = body_text.Selection;
-			var doc = body_text.Document;
 		
-			if (sel == null &&
-				!EditingCommands.ToggleBold.CanExecute(null, body_text))
-				ShowMessage("nothing to bold");
-			else{
-				ShowMessage($"Bolding \"{sel.Text}\"");
-				EditingCommands.ToggleBold.Execute(null, body_text);
-				
+			ShowMessage($"Bolding \"{sel.Text}\"");
+			EditingCommands.ToggleBold.Execute(null, body_text);
 
-				//TODO: ADD BOLD WORDS TO SEARCH TERMS
-			}
+			ShowMessage(SearchTerms);
 
 		}
-
 
 		//TODO: Break this out into a new object class
 		private void MakeSlide()
@@ -91,8 +81,31 @@ namespace Context_is_for_Kings
 			get
 			{
 				string terms = "";
-				terms += title_text.Text;
-				
+				terms += title_text.Text.Trim();
+
+				//find bold words
+				var doc = body_text.Document;
+				var txt = new TextRange(doc.ContentStart, doc.ContentEnd);
+				var f = LogicalDirection.Forward;
+
+				var tp = txt.Start.GetInsertionPosition(f);
+				while (tp != null && tp.GetNextContextPosition(f) != null)
+				{
+					var phrase = new TextRange(tp, tp.GetNextContextPosition(f));
+
+					var fw = phrase.GetPropertyValue(TextElement.FontWeightProperty);
+
+					if (fw.Equals(FontWeights.Bold))
+					{
+						var boldterm = phrase.Text.Trim();
+						if (boldterm.Length > 0)
+							terms += " " + boldterm;
+					}
+					
+					tp = tp.GetNextContextPosition(f);
+				}
+
+				//TODO: ADD BOLD WORDS TO SEARCH TERMS
 
 				return terms;
 			}
@@ -105,8 +118,13 @@ namespace Context_is_for_Kings
 
 		private String api_key = "AIzaSyABjUacUUZJHieTcqXM-k1teDLI-2oG0mk";
 
-		private String searchURL = "https://www.google.com/search?tbm=isch&q=shoebox";
+		private String google = "https://www.google.com/search?tbm=isch&q=shoebox";
+		private string ddg = "https://duckduckgo.com/?q=shoebox&atb=v169-1&iax=images&ia=images";
 
+		private void Body_text_TextChanged(object sender, TextChangedEventArgs e)
+		{
+
+		}
 	}
 
 }
