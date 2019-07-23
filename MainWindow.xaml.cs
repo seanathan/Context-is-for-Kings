@@ -30,16 +30,26 @@ namespace Context_is_for_Kings
 			InitializeComponent();
 		}
 
+		private void SearchForContext()
+		{
+			var c = SearchTerms;
+			ShowMessage($"Searching for {c}");
+		}
+
 		private void Embolden_Click(object sender, RoutedEventArgs e)
 		{
 			var sel = body_text.Selection;
+			var doc = body_text.Document;
 		
-			if (sel == null ||
+			if (sel == null &&
 				!EditingCommands.ToggleBold.CanExecute(null, body_text))
 				ShowMessage("nothing to bold");
 			else{
 				ShowMessage($"Bolding \"{sel.Text}\"");
 				EditingCommands.ToggleBold.Execute(null, body_text);
+				
+
+				//TODO: ADD BOLD WORDS TO SEARCH TERMS
 			}
 
 		}
@@ -51,9 +61,19 @@ namespace Context_is_for_Kings
 			ShowMessage("Opening Powerpoint...");
 
 			var ppApp = new PowerPoint.Application();
+			
+			var pres = ppApp.Presentations.Add(Microsoft.Office.Core.MsoTriState.msoTrue);
+
+			var defaultSlide = pres.SlideMaster.CustomLayouts[3 /*PowerPoint.PpSlideLayout.ppLayoutTextAndObject*/ ];
+
+			var sld = pres.Slides.AddSlide(1, defaultSlide);
+
+			foreach (PowerPoint.Shape shp in sld.Shapes)
+				shp.TextFrame.TextRange.Text = "Hello Powerpoint";
+
+			pres.SaveAs("./new slide.pptx");
+
 			ppApp.Visible = Microsoft.Office.Core.MsoTriState.msoTrue;
-
-
 
 		}
 
@@ -66,5 +86,27 @@ namespace Context_is_for_Kings
 		{
 			message_block.Text = message;
 		}
+
+		private String SearchTerms{
+			get
+			{
+				string terms = "";
+				terms += title_text.Text;
+				
+
+				return terms;
+			}
+		}
+
+		private void Button_Click(object sender, RoutedEventArgs e)
+		{
+			SearchForContext();
+		}
+
+		private String api_key = "AIzaSyABjUacUUZJHieTcqXM-k1teDLI-2oG0mk";
+
+		private String searchURL = "https://www.google.com/search?tbm=isch&q=shoebox";
+
 	}
+
 }
