@@ -8,10 +8,39 @@
         Title="Context is for Kings - Powerpoint Slide Builder" Height="450" Width="800">
     <Grid>
         <TextBox x:Name="title_text" HorizontalAlignment="Left" Height="23" Margin="10,47,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="330" AutomationProperties.HelpText="Enter a title..." MinLines="1" MaxLines="1" Text="Title Of The Slide!"/>
-        <TextBox x:Name="body_text" HorizontalAlignment="Left" Height="247" Margin="10,75,0,0" TextWrapping="Wrap" Text="Body of the slide&#xD;&#xA;&#xD;&#xA;item 1 &#xD;&#xA;thing 2&#xD;&#xA;&#xD;&#xA;bold this&#xD;&#xA;&#xD;&#xA;last thing" VerticalAlignment="Top" Width="330" MaxLines="20" AcceptsTab="True" AcceptsReturn="True"/>
         <Button x:Name="embolden" Content="Bold" HorizontalAlignment="Left" Margin="265,327,0,0" VerticalAlignment="Top" Width="75" Click="Embolden_Click"/>
         <TextBlock x:Name="header_block" HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="Slide Builder" VerticalAlignment="Top" FontSize="24" FontFamily="Segoe UI Black"/>
         <Rectangle x:Name="results_pane" Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="314" Margin="345,47,0,0" Stroke="Black" VerticalAlignment="Top" Width="409"/>
+        <Button x:Name="make_slide" Content="Make Slide" HorizontalAlignment="Left" Margin="265,352,0,0" VerticalAlignment="Top" Width="75" Click="Make_slide_Click"/>
+        <TextBlock x:Name="message_block" HorizontalAlignment="Left" Margin="10,393,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" Width="744"/>
+        <RichTextBox x:Name="body_text" HorizontalAlignment="Left" Height="247" Margin="10,75,0,0" VerticalAlignment="Top" Width="330">
+            <FlowDocument>
+                <Paragraph>
+                    <Run Text="Body of the slide"/>
+                </Paragraph>
+                <Paragraph>
+                    <Run/>
+                </Paragraph>
+                <Paragraph>
+                    <Run Text="item 1 "/>
+                </Paragraph>
+                <Paragraph>
+                    <Run Text="thing 2"/>
+                </Paragraph>
+                <Paragraph>
+                    <Run/>
+                </Paragraph>
+                <Paragraph>
+                    <Run Text="bold this"/>
+                </Paragraph>
+                <Paragraph>
+                    <Run/>
+                </Paragraph>
+                <Paragraph>
+                    <Run Text="last thing"/>
+                </Paragraph>
+            </FlowDocument>
+        </RichTextBox>
 
     </Grid>
 </Window>
