@@ -57,7 +57,7 @@
                 </ItemsPanelTemplate>
             </ListBox.ItemsPanel>
         </ListBox>
-        <WebBrowser x:Name="preview_box" HorizontalAlignment="Left" Height="211" VerticalAlignment="Top" Width="349" Margin="358,177,0,0" Grid.ColumnSpan="2"/>
+        <DocumentViewer x:Name="preview_box" HorizontalAlignment="Left" Height="235" VerticalAlignment="Top" Width="437" Margin="345,153,0,0" Grid.ColumnSpan="2" Zoom="50" />
 
     </Grid>
 </Window>

@@ -35,7 +35,7 @@ namespace Context_is_for_Kings
 			InitializeComponent();
 		}
 
-		class ImageResult
+		public class ImageResult
 		{
 			public string title;
 			public string imageUrl;
@@ -95,18 +95,10 @@ namespace Context_is_for_Kings
 				}
 			}
 
-			public ListBoxItem ListItem { 
-				get
-				{
-					var li = new ListBoxItem();
-					var image = new Image();
-					image.Source = ThumbnailImage;
-					li.Content = image;
-					return li;
-				} 
-			}
 
 		}
+
+		public List<ImageResult> Images { get; set; }
 
 		private void SearchForContext()
 		{
@@ -117,35 +109,30 @@ namespace Context_is_for_Kings
 			String exurl = "https://www.googleapis.com/customsearch/v1?key=AIzaSyABjUacUUZJHieTcqXM-k1teDLI-2oG0mk&cx=003899740029777113339:wt6hcdq1e04&&searchType=image&q=shoebox";
 
 			var gurl = new Uri(gsearch);
-
 			ShowMessage($"Searching for {SearchTerms} at {gurl}");
-
 			var req = PackWebRequest.CreateHttp(gurl);
-
 			var res = req.GetResponse();
 
 
 			debug_output.Text = "Results:\n";
-
 			var rsr = new StreamReader(res.GetResponseStream());
-
 			string txt =  rsr.ReadToEnd() ?? "";
 
 			var topj = JObject.Parse(txt);
 			var items = topj["items"];
 
-			var images = new List<ImageResult>();
+			Images = new List<ImageResult>();
 
 			foreach (JObject item in items)
 			{
 				var ir = new ImageResult(item);
 				debug_output.Text += $"\nITEM\n{ir.title}\n{ir.imageUrl}\n{ir.thumbnailUrl}";
-				images.Add(ir);
+				Images.Add(ir);
 			}
 
 			//display all thumbnails
 			listBox.Items.Clear();
-			foreach (ImageResult ir in images)
+			foreach (ImageResult ir in Images)
 			{
 				var lbi = new ListBoxItem();
 				var image = new Image();
@@ -174,13 +161,13 @@ namespace Context_is_for_Kings
 
 			//make a bunch of thumbnails
 
-			var testThumbs = new List<ImageResult>();
-			while (testThumbs.Count < 10)
-				testThumbs.Add(new ImageResult(null));
+			Images = new List<ImageResult>();
+			while (Images.Count < 10)
+				Images.Add(new ImageResult(null));
 
 			listBox.Items.Clear();
 
-			foreach (ImageResult ir in testThumbs)
+			foreach (ImageResult ir in Images)
 			{
 				var lbi = new ListBoxItem();
 				var image = new Image();
@@ -189,56 +176,74 @@ namespace Context_is_for_Kings
 				image.ToolTip = ir.title;
 				lbi.Content = image;
 				listBox.Items.Add(lbi);
-
 			}
 
 
 		}
 
 
-		private PowerPoint.Application ppApp = new PowerPoint.Application();
 
-		//TODO: Break this out into a new object class
 		private void MakeSlide()
 		{
-			
-
 			ShowMessage("Opening Powerpoint...");
 
-			//var ppApp = new PowerPoint.Application();
-
+			var ppApp = new PowerPoint.Application();
 			var pres = ppApp.Presentations.Add(Microsoft.Office.Core.MsoTriState.msoTrue);
-
 			var defaultSlide = pres.SlideMaster.CustomLayouts[4 /*PowerPoint.PpSlideLayout.ppLayoutTextAndObject*/ ];
 
 			PowerPoint.Slide sld = pres.Slides.AddSlide(1, defaultSlide);
+			//PowerPoint.Shape s = sld.Shapes[1];
 
-			foreach (PowerPoint.Shape shp in sld.Shapes)
-				shp.TextFrame.TextRange.Text = "Hello Powerpoint";
+			var sh_title = sld.Shapes[1];
+			var sh_body = sld.Shapes[2];
+			var sh_image = sld.Shapes[3];
+
+			sh_title.TextFrame.TextRange.Text = title_text.Text;
+			var doc = body_text.Document;
+			sh_body.TextFrame.TextRange.Text = (new TextRange(doc.ContentStart, doc.ContentEnd)).Text;
+
+
+
+			if (listBox.SelectedIndex != -1)
+			{
+				var img = Images.ElementAt<ImageResult>(listBox.SelectedIndex).HiresImage;
+				sld.Shapes.AddPicture(img.UriSource.ToString(),
+				Microsoft.Office.Core.MsoTriState.msoFalse, Microsoft.Office.Core.MsoTriState.msoTrue,
+				sh_image.Left, sh_image.Top, sh_image.Width); ;
+			}
+
+
 
 			//UPDATE PREVIEW
-			string prev_file = Path.GetTempPath() + "slide_preview.pptx";
-			pres.SaveCopyAs(prev_file);
-
-
+			String working_file = Path.GetTempPath() + "slide_builder.pptx";
+			pres.SaveAs(working_file);
+			
+			string prev_file = Path.GetTempPath() + "slide_preview.xps";
+			pres.ExportAsFixedFormat(prev_file, PowerPoint.PpFixedFormatType.ppFixedFormatTypeXPS);
 
 			//render preview
+
 			try
 			{
-				preview_box.Navigate(prev_file);
+				XpsDocument presxps = new XpsDocument(prev_file, FileAccess.Read);
+				preview_box.Document = presxps.GetFixedDocumentSequence();
+				preview_box.MaxWidth = preview_box.ViewportWidth;
 			}
 			catch (Exception e)
 			{
 				MessageBox.Show("couldn't open... " + e.ToString());
 			}
 			
-			//SaveSlide();
+			
+			pres.Close();
+
+			//save file!!
+			//SaveSlide(pres);
 
 			//pres.SaveAs("./new slide.pptx"); // need generated filenames
 
 			//ppApp.Visible = Microsoft.Office.Core.MsoTriState.msoTrue;
-
-			//pres.Close();
+			
 
 		}
 
