@@ -35,9 +35,25 @@ namespace Context_is_for_Kings
 
 		class ImageResult
 		{
-			public string title { get; set; }
-			public string link { get; set; }
-			public string thumbnail { get; set; }
+			public string title;
+			public string link;
+			public string thumbnail;
+			public BitmapImage thumb;
+
+			public ImageResult(JObject item)
+			{
+				title = item.Value<string>("title");
+				link = item.Value<string>("link");
+				var imageprops = item.Value<JObject>("image");
+				thumbnail = imageprops.Value<string>("thumbnailLink");
+
+				thumb = new BitmapImage();
+				thumb.BeginInit();
+				thumb.UriSource = new Uri(thumbnail);
+				thumb.CacheOption = BitmapCacheOption.OnLoad;
+				thumb.EndInit();
+				
+			}
 
 	}
 
@@ -66,15 +82,19 @@ namespace Context_is_for_Kings
 
 			var topj = JObject.Parse(txt);
 			var items = topj["items"];
+
+			var images = new List<ImageResult>();
+
 			foreach (JObject item in items)
 			{
-				var ir = new ImageResult();
-				ir.title = item.Value<string>("title");
-				ir.link = item.Value<string>("link");
-				ir.thumbnail = item.Value<string>("thumbnail");
-
-				debug_output.Text += $"\n{ir.title}\n{ir.link}\n{ir.thumbnail}";
+				var ir = new ImageResult(item);
+				debug_output.Text += $"\nITEM\n{ir.title}\n{ir.link}\n{ir.thumbnail}";
+				images.Add(ir);
 			}
+
+			var th = images.ElementAt(0);
+
+			image1.Source = th.thumb;
 
 			// json response -> "items"
 			// items[i] -> title

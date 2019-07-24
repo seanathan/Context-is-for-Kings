@@ -7,12 +7,15 @@
         mc:Ignorable="d"
         Title="Context is for Kings - Powerpoint Slide Builder" Height="450" Width="800">
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="49*"/>
+            <ColumnDefinition Width="12*"/>
+        </Grid.ColumnDefinitions>
         <TextBox x:Name="title_text" HorizontalAlignment="Left" Height="23" Margin="10,47,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="330" AutomationProperties.HelpText="Enter a title..." MinLines="1" MaxLines="1" Text="Title Of The Slide!"/>
         <Button x:Name="embolden" Content="Bold" HorizontalAlignment="Left" Margin="265,327,0,0" VerticalAlignment="Top" Width="75" Click="Embolden_Click"/>
         <TextBlock x:Name="header_block" HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="Slide Builder" VerticalAlignment="Top" FontSize="24" FontFamily="Segoe UI Black"/>
-        <Rectangle x:Name="results_pane" Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="117" Margin="345,47,0,0" Stroke="Black" VerticalAlignment="Top" Width="395"/>
         <Button x:Name="make_slide" Content="Make Slide" HorizontalAlignment="Left" Margin="265,352,0,0" VerticalAlignment="Top" Width="75" Click="Make_slide_Click"/>
-        <TextBlock x:Name="message_block" HorizontalAlignment="Left" Margin="10,393,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" Width="744"/>
+        <TextBlock x:Name="message_block" HorizontalAlignment="Left" Margin="10,393,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" Width="744" Grid.ColumnSpan="2"/>
         <RichTextBox x:Name="body_text" HorizontalAlignment="Left" Height="247" Margin="10,75,0,0" VerticalAlignment="Top" Width="330" TextChanged="Body_text_TextChanged">
             <FlowDocument>
                 <Paragraph>
@@ -43,7 +46,11 @@
             </FlowDocument>
         </RichTextBox>
         <Button x:Name="SearchButton" Content="Search for Images" HorizontalAlignment="Left" Margin="10,327,0,0" VerticalAlignment="Top" Width="150" Click="Button_Click"/>
-        <TextBox x:Name="debug_output" HorizontalAlignment="Left" Margin="373,221,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" Height="151" Width="327"/>
+        <TextBox x:Name="debug_output" HorizontalAlignment="Left" Margin="17.5,278,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" Height="115" Width="128" Grid.Column="1"/>
+        <ScrollViewer x:Name="results_pane" HorizontalAlignment="Left" Height="146" VerticalAlignment="Top" Width="387" Margin="367,47,0,0" Grid.ColumnSpan="2">
+            <Image x:Name="image1" HorizontalAlignment="Left" Height="100" VerticalAlignment="Top" Width="100"/>
+        </ScrollViewer>
+        <WrapPanel HorizontalAlignment="Left" Height="142" Margin="367,198,0,0" VerticalAlignment="Top" Width="358" Grid.ColumnSpan="2"/>
 
     </Grid>
 </Window>
