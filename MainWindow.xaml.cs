@@ -36,26 +36,75 @@ namespace Context_is_for_Kings
 		class ImageResult
 		{
 			public string title;
-			public string link;
-			public string thumbnail;
-			public BitmapImage thumb;
+			public string imageUrl;
+			public string thumbnailUrl;
+			private BitmapImage thumb;
+			private BitmapImage hires;
+
+			public string dummy = "http://icons.iconarchive.com/icons/mattrich/adidas/512/Adidas-Shoebox-2-icon.png";
 
 			public ImageResult(JObject item)
 			{
-				title = item.Value<string>("title");
-				link = item.Value<string>("link");
-				var imageprops = item.Value<JObject>("image");
-				thumbnail = imageprops.Value<string>("thumbnailLink");
+				// json response -> "items"
+				// items[i] -> title
+				// items[i] -> link = img src
+				// items[i] -> image -> thumbnailLink = thumbnail source
+
+				if (item == null)
+				{
+					title = "Shoebox";
+					imageUrl = dummy;
+					thumbnailUrl = dummy;
+				}
+				else
+				{
+					title = item.Value<string>("title");
+					imageUrl = item.Value<string>("link");
+					var imageprops = item.Value<JObject>("image");
+					thumbnailUrl = imageprops.Value<string>("thumbnailLink");
+				}
 
 				thumb = new BitmapImage();
 				thumb.BeginInit();
-				thumb.UriSource = new Uri(thumbnail);
+				thumb.UriSource = new Uri(thumbnailUrl);
 				thumb.CacheOption = BitmapCacheOption.OnLoad;
 				thumb.EndInit();
-				
+
 			}
 
-	}
+			public BitmapImage HiresImage {
+				get {
+					BitmapImage image = new BitmapImage();
+					image.BeginInit();
+					image.UriSource = new Uri(imageUrl);
+					image.CacheOption = BitmapCacheOption.OnLoad;
+					image.EndInit();
+					return image;
+				}
+			}
+			public BitmapImage ThumbnailImage {
+				get {
+					BitmapImage image = new BitmapImage();
+					image.BeginInit();
+					image.UriSource = new Uri(thumbnailUrl);
+					image.CacheOption = BitmapCacheOption.OnLoad;
+					image.EndInit();
+					return image;
+				}
+			}
+
+			public ListBoxItem ListItem { 
+				get
+				{
+					var li = new ListBoxItem();
+					var image = new Image();
+					image.Source = ThumbnailImage;
+					li.Content = image;
+					return li;
+				} 
+			}
+
+		}
 
 		private void SearchForContext()
 		{
@@ -88,20 +137,24 @@ namespace Context_is_for_Kings
 			foreach (JObject item in items)
 			{
 				var ir = new ImageResult(item);
-				debug_output.Text += $"\nITEM\n{ir.title}\n{ir.link}\n{ir.thumbnail}";
+				debug_output.Text += $"\nITEM\n{ir.title}\n{ir.imageUrl}\n{ir.thumbnailUrl}";
 				images.Add(ir);
 			}
 
-			var th = images.ElementAt(0);
+			//display all thumbnails
+			listBox.Items.Clear();
+			foreach (ImageResult ir in images)
+			{
+				var lbi = new ListBoxItem();
+				var image = new Image();
+				image.Source = ir.ThumbnailImage;
+				image.MaxHeight = listBox.ActualHeight;
+				image.ToolTip = ir.title;
+				lbi.Content = image;
 
-			image1.Source = th.thumb;
-
-			// json response -> "items"
-			// items[i] -> title
-			// items[i] -> link = img src
-			// items[i] -> image -> thumbnailLink = thumbnail source
-
-			ShowMessage("content type: " + res.ContentType);
+				listBox.Items.Add(lbi);
+			}
+			ShowMessage("done");
 		}
 
 
@@ -115,6 +168,28 @@ namespace Context_is_for_Kings
 			EditingCommands.ToggleBold.Execute(null, body_text);
 
 			ShowMessage(SearchTerms);
+
+
+			//make a bunch of thumbnails
+
+			var testThumbs = new List<ImageResult>();
+			while (testThumbs.Count < 10)
+				testThumbs.Add(new ImageResult(null));
+
+			listBox.Items.Clear();
+
+			foreach (ImageResult ir in testThumbs)
+			{
+				var lbi = new ListBoxItem();
+				var image = new Image();
+				image.Source = ir.ThumbnailImage;
+				image.MaxHeight = listBox.ActualHeight;
+				image.ToolTip = ir.title;
+				lbi.Content = image;
+				listBox.Items.Add(lbi);
+
+			}
+
 
 		}
 

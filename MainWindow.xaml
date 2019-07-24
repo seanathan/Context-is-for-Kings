@@ -47,10 +47,16 @@
         </RichTextBox>
         <Button x:Name="SearchButton" Content="Search for Images" HorizontalAlignment="Left" Margin="10,327,0,0" VerticalAlignment="Top" Width="150" Click="Button_Click"/>
         <TextBox x:Name="debug_output" HorizontalAlignment="Left" Margin="17.5,278,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" Height="115" Width="128" Grid.Column="1"/>
-        <ScrollViewer x:Name="results_pane" HorizontalAlignment="Left" Height="146" VerticalAlignment="Top" Width="387" Margin="367,47,0,0" Grid.ColumnSpan="2">
-            <Image x:Name="image1" HorizontalAlignment="Left" Height="100" VerticalAlignment="Top" Width="100"/>
-        </ScrollViewer>
-        <WrapPanel HorizontalAlignment="Left" Height="142" Margin="367,198,0,0" VerticalAlignment="Top" Width="358" Grid.ColumnSpan="2"/>
+        <ListBox x:Name="listBox" ScrollViewer.VerticalScrollBarVisibility="Disabled" HorizontalAlignment="Left" Height="101" Margin="345,47,0,0" VerticalAlignment="Top" Width="437" Grid.ColumnSpan="2" SelectionMode="Multiple">
+            <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+
+                    <WrapPanel Orientation="Horizontal" IsItemsHost="True">
+
+                    </WrapPanel>
+                </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
+        </ListBox>
 
     </Grid>
 </Window>
