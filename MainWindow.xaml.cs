@@ -102,6 +102,9 @@ namespace Context_is_for_Kings
 
 		private void SearchForContext()
 		{
+			if (listBox == null )
+				return;
+
 			String api_key = "AIzaSyABjUacUUZJHieTcqXM-k1teDLI-2oG0mk";
 			String cx = "003899740029777113339:wt6hcdq1e04";
 			String gsearch = $"https://www.googleapis.com/customsearch/v1?key={api_key}&cx={cx}&&searchType=image&q={SearchTerms}";
@@ -113,8 +116,6 @@ namespace Context_is_for_Kings
 			var req = PackWebRequest.CreateHttp(gurl);
 			var res = req.GetResponse();
 
-
-			debug_output.Text = "Results:\n";
 			var rsr = new StreamReader(res.GetResponseStream());
 			string txt =  rsr.ReadToEnd() ?? "";
 
@@ -126,7 +127,6 @@ namespace Context_is_for_Kings
 			foreach (JObject item in items)
 			{
 				var ir = new ImageResult(item);
-				debug_output.Text += $"\nITEM\n{ir.title}\n{ir.imageUrl}\n{ir.thumbnailUrl}";
 				Images.Add(ir);
 			}
 
@@ -159,6 +159,13 @@ namespace Context_is_for_Kings
 			ShowMessage(SearchTerms);
 
 
+		}
+
+		private void getDummyContent()
+		{
+			if (listBox == null)
+				return;
+
 			//make a bunch of thumbnails
 
 			Images = new List<ImageResult>();
@@ -178,14 +185,18 @@ namespace Context_is_for_Kings
 				listBox.Items.Add(lbi);
 			}
 
-
 		}
-
-
 
 		private void MakeSlide()
 		{
 			ShowMessage("Opening Powerpoint...");
+
+			var pfile = new Microsoft.Win32.SaveFileDialog();
+			pfile.DefaultExt = ".pptx";
+
+			var doSave = pfile.ShowDialog() ?? false;
+			if (!doSave)
+				return;
 
 			var ppApp = new PowerPoint.Application();
 			var pres = ppApp.Presentations.Add(Microsoft.Office.Core.MsoTriState.msoTrue);
@@ -208,20 +219,20 @@ namespace Context_is_for_Kings
 			{
 				var img = Images.ElementAt<ImageResult>(listBox.SelectedIndex).HiresImage;
 				sld.Shapes.AddPicture(img.UriSource.ToString(),
-				Microsoft.Office.Core.MsoTriState.msoFalse, Microsoft.Office.Core.MsoTriState.msoTrue,
-				sh_image.Left, sh_image.Top, sh_image.Width); ;
+				Microsoft.Office.Core.MsoTriState.msoFalse, 
+				Microsoft.Office.Core.MsoTriState.msoTrue,
+				sh_image.Left, sh_image.Top, sh_image.Width);
 			}
 
+			//render preview
 
-
+			/*
 			//UPDATE PREVIEW
 			String working_file = Path.GetTempPath() + "slide_builder.pptx";
 			pres.SaveAs(working_file);
-			
+
 			string prev_file = Path.GetTempPath() + "slide_preview.xps";
 			pres.ExportAsFixedFormat(prev_file, PowerPoint.PpFixedFormatType.ppFixedFormatTypeXPS);
-
-			//render preview
 
 			try
 			{
@@ -233,31 +244,16 @@ namespace Context_is_for_Kings
 			{
 				MessageBox.Show("couldn't open... " + e.ToString());
 			}
-			
-			
-			pres.Close();
+			*/
 
-			//save file!!
-			//SaveSlide(pres);
+			pres.SaveAs(pfile.FileName);
+			//pres.Close();
 
-			//pres.SaveAs("./new slide.pptx"); // need generated filenames
-
-			//ppApp.Visible = Microsoft.Office.Core.MsoTriState.msoTrue;
-			
 
 		}
 
 		private void SaveSlide(PowerPoint.Presentation pres)
 		{
-			var pfile = new Microsoft.Win32.SaveFileDialog();
-			pfile.DefaultExt = ".pptx";
-
-
-			var doSave = pfile.ShowDialog() ?? false;
-			if (!doSave)
-				return;
-
-			pres.SaveAs(pfile.FileName);
 
 		}
 
@@ -268,7 +264,8 @@ namespace Context_is_for_Kings
 
 		private void ShowMessage(String message)
 		{
-			message_block.Text = message;
+			if (message_block != null)
+				message_block.Text = message;
 		}
 
 		private String SearchTerms{
@@ -307,12 +304,32 @@ namespace Context_is_for_Kings
 
 		private void Button_Click(object sender, RoutedEventArgs e)
 		{
-			SearchForContext();
+			getDummyContent();
+			//SearchForContext();
 		}
 
 		private void Body_text_TextChanged(object sender, TextChangedEventArgs e)
 		{
 			
+		}
+
+		private void Title_text_TextChanged(object sender, TextChangedEventArgs e)
+		{
+			//would do this, but I would use up all of my API calls!
+
+			//ShowMessage("refreshing results");
+			//getDummyContent();
+			//SearchForContext();
+		}
+
+		private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+		{
+			if (listBox.SelectedIndex != -1)
+			{
+				var img = Images.ElementAt<ImageResult>(listBox.SelectedIndex).HiresImage;
+				main_image.Source = img;
+			}
+
 		}
 	}
 
