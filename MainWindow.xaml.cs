@@ -14,6 +14,11 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.IO.Packaging;
 using PowerPoint = Microsoft.Office.Interop.PowerPoint;
+using System.Net;
+using System.IO;
+using NJS = Newtonsoft.Json;
+using System.Web.Script.Serialization;
+using Newtonsoft.Json.Linq;
 
 namespace Context_is_for_Kings
 {
@@ -28,11 +33,59 @@ namespace Context_is_for_Kings
 			InitializeComponent();
 		}
 
+		class ImageResult
+		{
+			public string title { get; set; }
+			public string link { get; set; }
+			public string thumbnail { get; set; }
+
+	}
+
 		private void SearchForContext()
 		{
-			var c = SearchTerms;
-			ShowMessage($"Searching for {c}");
+			String api_key = "AIzaSyABjUacUUZJHieTcqXM-k1teDLI-2oG0mk";
+			String cx = "003899740029777113339:wt6hcdq1e04";
+			String gsearch = $"https://www.googleapis.com/customsearch/v1?key={api_key}&cx={cx}&&searchType=image&q={SearchTerms}";
+
+			String exurl = "https://www.googleapis.com/customsearch/v1?key=AIzaSyABjUacUUZJHieTcqXM-k1teDLI-2oG0mk&cx=003899740029777113339:wt6hcdq1e04&&searchType=image&q=shoebox";
+
+			var gurl = new Uri(gsearch);
+
+			ShowMessage($"Searching for {SearchTerms} at {gurl}");
+
+			var req = PackWebRequest.CreateHttp(gurl);
+
+			var res = req.GetResponse();
+
+
+			debug_output.Text = "Results:\n";
+
+			var rsr = new StreamReader(res.GetResponseStream());
+
+			string txt =  rsr.ReadToEnd() ?? "";
+
+			var topj = JObject.Parse(txt);
+			var items = topj["items"];
+			foreach (JObject item in items)
+			{
+				var ir = new ImageResult();
+				ir.title = item.Value<string>("title");
+				ir.link = item.Value<string>("link");
+				ir.thumbnail = item.Value<string>("thumbnail");
+
+				debug_output.Text += $"\n{ir.title}\n{ir.link}\n{ir.thumbnail}";
+			}
+
+			// json response -> "items"
+			// items[i] -> title
+			// items[i] -> link = img src
+			// items[i] -> image -> thumbnailLink = thumbnail source
+
+			ShowMessage("content type: " + res.ContentType);
 		}
+
+
+		//TODO: select up to 3 images
 
 		private void Embolden_Click(object sender, RoutedEventArgs e)
 		{
@@ -116,14 +169,9 @@ namespace Context_is_for_Kings
 			SearchForContext();
 		}
 
-		private String api_key = "AIzaSyABjUacUUZJHieTcqXM-k1teDLI-2oG0mk";
-
-		private String google = "https://www.google.com/search?tbm=isch&q=shoebox";
-		private string ddg = "https://duckduckgo.com/?q=shoebox&atb=v169-1&iax=images&ia=images";
-
 		private void Body_text_TextChanged(object sender, TextChangedEventArgs e)
 		{
-
+			
 		}
 	}
 

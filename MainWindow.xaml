@@ -43,7 +43,7 @@
             </FlowDocument>
         </RichTextBox>
         <Button x:Name="SearchButton" Content="Search for Images" HorizontalAlignment="Left" Margin="10,327,0,0" VerticalAlignment="Top" Width="150" Click="Button_Click"/>
-        <WebBrowser HorizontalAlignment="Left" Height="224" Margin="345,169,0,0" VerticalAlignment="Top" Width="395"/>
+        <TextBox x:Name="debug_output" HorizontalAlignment="Left" Margin="373,221,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" Height="151" Width="327"/>
 
     </Grid>
 </Window>
