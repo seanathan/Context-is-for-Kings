@@ -26,6 +26,8 @@ namespace Context_is_for_Kings
 {
 	/// <summary>
 	/// Interaction logic for MainWindow.xaml
+	/// 
+	/// Quick Application which searches for images to accompany a title and text for a powerpoint slide.
 	/// </summary>
 	public partial class MainWindow : Window
 	{
@@ -94,8 +96,6 @@ namespace Context_is_for_Kings
 					return image;
 				}
 			}
-
-
 		}
 
 		public List<ImageResult> Images { get; set; }
@@ -147,8 +147,6 @@ namespace Context_is_for_Kings
 		}
 
 
-		//TODO: select up to 3 images
-
 		private void Embolden_Click(object sender, RoutedEventArgs e)
 		{
 			var sel = body_text.Selection;
@@ -157,8 +155,6 @@ namespace Context_is_for_Kings
 			EditingCommands.ToggleBold.Execute(null, body_text);
 
 			ShowMessage(SearchTerms);
-
-
 		}
 
 		private void getDummyContent()
@@ -189,41 +185,54 @@ namespace Context_is_for_Kings
 
 		private void MakeSlide()
 		{
-			ShowMessage("Opening Powerpoint...");
-
+			//pop open a save dialogue
 			var pfile = new Microsoft.Win32.SaveFileDialog();
 			pfile.DefaultExt = ".pptx";
+			pfile.AddExtension = true;
 
 			var doSave = pfile.ShowDialog() ?? false;
 			if (!doSave)
 				return;
 
+			
+			ShowMessage("Generating Powerpoint File...");
 			var ppApp = new PowerPoint.Application();
 			var pres = ppApp.Presentations.Add(Microsoft.Office.Core.MsoTriState.msoTrue);
 			var defaultSlide = pres.SlideMaster.CustomLayouts[4 /*PowerPoint.PpSlideLayout.ppLayoutTextAndObject*/ ];
 
-			PowerPoint.Slide sld = pres.Slides.AddSlide(1, defaultSlide);
+			PowerPoint.Slide slide = pres.Slides.AddSlide(1, defaultSlide);
 			//PowerPoint.Shape s = sld.Shapes[1];
 
-			var sh_title = sld.Shapes[1];
-			var sh_body = sld.Shapes[2];
-			var sh_image = sld.Shapes[3];
+			var sh_title = slide.Shapes[1];
+			var sh_body = slide.Shapes[2];
+			var sh_image = slide.Shapes[3];
 
 			sh_title.TextFrame.TextRange.Text = title_text.Text;
 			var doc = body_text.Document;
 			sh_body.TextFrame.TextRange.Text = (new TextRange(doc.ContentStart, doc.ContentEnd)).Text;
 
 
+			var c = listBox.SelectedItems.Count;
+			var w = sh_image.Width;
+			var h = sh_image.Height;
+			var offset = w /c;
+			var l = sh_image.Left;
+			var t = sh_image.Top;
+			var mf = Microsoft.Office.Core.MsoTriState.msoFalse;
+			var mt = Microsoft.Office.Core.MsoTriState.msoTrue;
+			//pic 1
+			if (c > 0)
+				slide.Shapes.AddPicture(placed1.Source.ToString(), mf, mt, l,t, w, h);
 
-			if (listBox.SelectedIndex != -1)
-			{
-				var img = Images.ElementAt<ImageResult>(listBox.SelectedIndex).HiresImage;
-				sld.Shapes.AddPicture(img.UriSource.ToString(),
-				Microsoft.Office.Core.MsoTriState.msoFalse, 
-				Microsoft.Office.Core.MsoTriState.msoTrue,
-				sh_image.Left, sh_image.Top, sh_image.Width);
-			}
-
+			//pic 2
+			if (c > 1)
+				slide.Shapes.AddPicture(placed2.Source.ToString(), mf, mt, l + offset, t + offset, w,h );
+			
+			//pic 3
+			if (c > 2)
+				slide.Shapes.AddPicture(placed3.Source.ToString(), mf, mt, l + (2* offset), t + (2*offset), w,h );
+		
+				
 			//render preview
 
 			/*
@@ -245,17 +254,13 @@ namespace Context_is_for_Kings
 				MessageBox.Show("couldn't open... " + e.ToString());
 			}
 			*/
-
 			pres.SaveAs(pfile.FileName);
+			ShowMessage("File Saved!");
 			//pres.Close();
 
 
 		}
 
-		private void SaveSlide(PowerPoint.Presentation pres)
-		{
-
-		}
 
 		private void Make_slide_Click(object sender, RoutedEventArgs e)
 		{	
@@ -296,16 +301,14 @@ namespace Context_is_for_Kings
 					tp = tp.GetNextContextPosition(f);
 				}
 
-				//TODO: ADD BOLD WORDS TO SEARCH TERMS
-
 				return terms;
 			}
 		}
 
 		private void Button_Click(object sender, RoutedEventArgs e)
 		{
-			getDummyContent();
-			//SearchForContext();
+			//getDummyContent();
+			SearchForContext();
 		}
 
 		private void Body_text_TextChanged(object sender, TextChangedEventArgs e)
@@ -324,11 +327,20 @@ namespace Context_is_for_Kings
 
 		private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
-			if (listBox.SelectedIndex != -1)
+			var selected_images = new List<BitmapImage>();
+
+			for (int i = 0; i < listBox.Items.Count; i++)
 			{
-				var img = Images.ElementAt<ImageResult>(listBox.SelectedIndex).HiresImage;
-				main_image.Source = img;
+				ListBoxItem item = (ListBoxItem)listBox.Items.GetItemAt(i);
+				if (item.IsSelected && selected_images.Count < 3)
+				{
+					selected_images.Add(Images.ElementAt<ImageResult>(i).HiresImage);
+				}
 			}
+			var c = selected_images.Count;
+			placed1.Source = (c > 0) ? selected_images.ElementAt<BitmapImage>(0) : null;
+			placed2.Source = (c > 1) ? selected_images.ElementAt<BitmapImage>(1) : null;
+			placed3.Source = (c > 2) ? selected_images.ElementAt<BitmapImage>(2) : null;
 
 		}
 	}

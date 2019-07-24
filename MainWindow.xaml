@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Context_is_for_Kings"
         mc:Ignorable="d"
-        Title="Context is for Kings - Powerpoint Slide Builder" Height="633" Width="800">
-    <Grid Margin="16">
+        Title="Context is for Kings - Powerpoint Slide Builder" Height="633" Width="800" Background="#FFD8690D">
+    <Grid Margin="16" Background="#CCFFFFFF">
         <Grid.RowDefinitions>
             <RowDefinition Height="52*"/>
             <RowDefinition Height="5*"/>
@@ -16,20 +16,20 @@
             <ColumnDefinition Width="389*"/>
             <ColumnDefinition Width="403*"/>
         </Grid.ColumnDefinitions>
-        <TextBox x:Name="title_text" Margin="0,70,0,0" VerticalAlignment="Top" AutomationProperties.HelpText="Enter a title..." MinLines="1" MaxLines="16" Text="Slide Title" FontSize="36" Grid.ColumnSpan="2" HorizontalAlignment="Center" Width="760" Height="66" TextWrapping="Wrap" HorizontalContentAlignment="Center" Padding="16,16,16,0" TextChanged="Title_text_TextChanged" TextAlignment="Center"/>
-        <Button x:Name="embolden" Content="Bold Selection" HorizontalAlignment="Left" Margin="0,457,0,0" VerticalAlignment="Top" Width="108" Click="Embolden_Click" Height="20"/>
+        <TextBox x:Name="title_text" Margin="10,70,10,0" VerticalAlignment="Top" AutomationProperties.HelpText="Enter a title..." MinLines="1" MaxLines="16" Text="Slide Title" FontSize="36" Grid.ColumnSpan="2" HorizontalAlignment="Center" Width="740" Height="66" TextWrapping="Wrap" HorizontalContentAlignment="Center" Padding="16,16,16,0" TextChanged="Title_text_TextChanged" TextAlignment="Center" BorderBrush="{x:Null}"/>
+        <Button x:Name="embolden" Content="Bold Selection" HorizontalAlignment="Left" Margin="10,456,0,0" VerticalAlignment="Top" Width="98" Click="Embolden_Click" Height="21" BorderBrush="{x:Null}"/>
         <TextBlock x:Name="header_block" HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="Slide Builder" VerticalAlignment="Top" FontSize="24" FontFamily="Segoe UI Black" Height="32" Width="150"/>
-        <Button x:Name="make_slide" Content="Save Slide" HorizontalAlignment="Left" Margin="0,482,0,0" VerticalAlignment="Top" Width="250" Click="Make_slide_Click" Height="63" FontSize="24" Grid.RowSpan="2"/>
-        <TextBlock x:Name="message_block" HorizontalAlignment="Left" Margin="0,30,0,-3" TextWrapping="Wrap" VerticalAlignment="Top" Width="373" Height="23" Grid.RowSpan="2" Grid.Row="1"/>
-        <RichTextBox x:Name="body_text" HorizontalAlignment="Left" Height="294" Margin="0,155,0,0" VerticalAlignment="Top" Width="363" TextChanged="Body_text_TextChanged" Padding="16">
+        <Button x:Name="make_slide" Content="Generate Slide" HorizontalAlignment="Left" Margin="10,482,0,0" VerticalAlignment="Top" Width="353" Click="Make_slide_Click" Height="63" FontSize="24" Grid.RowSpan="2" Background="#FFFF7400" BorderBrush="{x:Null}"/>
+        <TextBlock x:Name="message_block" HorizontalAlignment="Left" Margin="0,25,0,-3" TextWrapping="Wrap" VerticalAlignment="Top" Width="363" Height="28" Grid.RowSpan="2" Grid.Row="1"/>
+        <RichTextBox x:Name="body_text" HorizontalAlignment="Left" Height="294" Margin="10,155,0,0" VerticalAlignment="Top" Width="353" TextChanged="Body_text_TextChanged" Padding="16" BorderBrush="{x:Null}">
             <FlowDocument>
                 <Paragraph>
                     <Run Text="Slide Text"/>
                 </Paragraph>
             </FlowDocument>
         </RichTextBox>
-        <Button x:Name="SearchButton" Content="Search &#xD;&#xA;for&#xD;&#xA;Images" HorizontalAlignment="Center" Margin="255,456,10,25" VerticalAlignment="Center" Width="108" Click="Button_Click" Height="89" Grid.RowSpan="2" FontSize="18"/>
-        <ListBox x:Name="listBox" ScrollViewer.VerticalScrollBarVisibility="Disabled" HorizontalAlignment="Left" Height="89" Margin="0,456,0,0" VerticalAlignment="Top" Width="387" SelectionMode="Multiple" Grid.Column="1" SelectionChanged="ListBox_SelectionChanged" Grid.RowSpan="2">
+        <Button x:Name="SearchButton" Content="Search for Images" HorizontalAlignment="Center" Margin="221,420,10,71" VerticalAlignment="Center" Width="156" Click="Button_Click" Height="29" FontSize="16" Background="#FFFF7400" BorderBrush="{x:Null}" Grid.Column="1"/>
+        <ListBox x:Name="listBox" ScrollViewer.VerticalScrollBarVisibility="Disabled" HorizontalAlignment="Left" Height="94" Margin="0,456,0,0" VerticalAlignment="Top" Width="377" SelectionMode="Multiple" Grid.Column="1" SelectionChanged="ListBox_SelectionChanged" Grid.RowSpan="2">
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
 
@@ -39,10 +39,12 @@
                 </ItemsPanelTemplate>
             </ListBox.ItemsPanel>
         </ListBox>
-        <TextBlock x:Name="title_label" HorizontalAlignment="Left" Margin="10,70,0,0" TextWrapping="Wrap" Text="Slide TItle" VerticalAlignment="Top" Height="17" Width="54" Opacity="0.5"/>
-        <TextBlock x:Name="title_label_Copy" HorizontalAlignment="Left" Margin="5,155,0,0" TextWrapping="Wrap" Text="Slide Body" VerticalAlignment="Top" Height="17" Width="83" Opacity="0.5"/>
-        <Image x:Name="main_image" Grid.Column="1" HorizontalAlignment="Left" Height="294" Margin="0,155,0,0" VerticalAlignment="Top" Width="387"/>
+        <TextBlock x:Name="title_label" HorizontalAlignment="Left" Margin="20,70,0,0" TextWrapping="Wrap" Text="Slide TItle" VerticalAlignment="Top" Height="17" Width="54" Opacity="0.5"/>
+        <TextBlock x:Name="title_label_Copy" HorizontalAlignment="Left" Margin="20,155,0,0" TextWrapping="Wrap" Text="Slide Body" VerticalAlignment="Top" Height="17" Width="83" Opacity="0.5"/>
+        <Image x:Name="placed1" Grid.Column="1" HorizontalAlignment="Left" Height="146" Margin="10,155,0,0" VerticalAlignment="Top" Width="183"/>
         <TextBlock x:Name="title_label_Copy1" HorizontalAlignment="Right" Margin="88,33,0,0" TextWrapping="Wrap" Text="Developed by Sean Bates for SEH America, 2019" VerticalAlignment="Top" Height="17" Width="299" Opacity="0.5" Grid.Column="2" Grid.Row="1" TextAlignment="Right"/>
+        <Image x:Name="placed3" Grid.Column="1" HorizontalAlignment="Left" Height="146" Margin="10,303,0,0" VerticalAlignment="Top" Width="183"/>
+        <Image x:Name="placed2" Grid.Column="1" HorizontalAlignment="Left" Height="146" Margin="194,238,0,0" VerticalAlignment="Top" Width="183"/>
 
     </Grid>
 </Window>
