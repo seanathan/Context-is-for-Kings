@@ -107,14 +107,14 @@ namespace Context_is_for_Kings
 			
 			var pres = ppApp.Presentations.Add(Microsoft.Office.Core.MsoTriState.msoTrue);
 
-			var defaultSlide = pres.SlideMaster.CustomLayouts[3 /*PowerPoint.PpSlideLayout.ppLayoutTextAndObject*/ ];
+			var defaultSlide = pres.SlideMaster.CustomLayouts[4 /*PowerPoint.PpSlideLayout.ppLayoutTextAndObject*/ ];
 
 			var sld = pres.Slides.AddSlide(1, defaultSlide);
 
 			foreach (PowerPoint.Shape shp in sld.Shapes)
 				shp.TextFrame.TextRange.Text = "Hello Powerpoint";
 
-			pres.SaveAs("./new slide.pptx");
+			pres.SaveAs("./new slide.pptx"); // need generated filenames
 
 			ppApp.Visible = Microsoft.Office.Core.MsoTriState.msoTrue;
 
