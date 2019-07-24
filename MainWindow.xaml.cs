@@ -19,6 +19,8 @@ using System.IO;
 using NJS = Newtonsoft.Json;
 using System.Web.Script.Serialization;
 using Newtonsoft.Json.Linq;
+using System.Windows.Xps.Packaging;
+using Path = System.IO.Path;
 
 namespace Context_is_for_Kings
 {
@@ -193,25 +195,64 @@ namespace Context_is_for_Kings
 
 		}
 
+
+		private PowerPoint.Application ppApp = new PowerPoint.Application();
+
 		//TODO: Break this out into a new object class
 		private void MakeSlide()
 		{
+			
+
 			ShowMessage("Opening Powerpoint...");
 
-			var ppApp = new PowerPoint.Application();
-			
+			//var ppApp = new PowerPoint.Application();
+
 			var pres = ppApp.Presentations.Add(Microsoft.Office.Core.MsoTriState.msoTrue);
 
 			var defaultSlide = pres.SlideMaster.CustomLayouts[4 /*PowerPoint.PpSlideLayout.ppLayoutTextAndObject*/ ];
 
-			var sld = pres.Slides.AddSlide(1, defaultSlide);
+			PowerPoint.Slide sld = pres.Slides.AddSlide(1, defaultSlide);
 
 			foreach (PowerPoint.Shape shp in sld.Shapes)
 				shp.TextFrame.TextRange.Text = "Hello Powerpoint";
 
-			pres.SaveAs("./new slide.pptx"); // need generated filenames
+			//UPDATE PREVIEW
+			string prev_file = Path.GetTempPath() + "slide_preview.pptx";
+			pres.SaveCopyAs(prev_file);
 
-			ppApp.Visible = Microsoft.Office.Core.MsoTriState.msoTrue;
+
+
+			//render preview
+			try
+			{
+				preview_box.Navigate(prev_file);
+			}
+			catch (Exception e)
+			{
+				MessageBox.Show("couldn't open... " + e.ToString());
+			}
+			
+			//SaveSlide();
+
+			//pres.SaveAs("./new slide.pptx"); // need generated filenames
+
+			//ppApp.Visible = Microsoft.Office.Core.MsoTriState.msoTrue;
+
+			//pres.Close();
+
+		}
+
+		private void SaveSlide(PowerPoint.Presentation pres)
+		{
+			var pfile = new Microsoft.Win32.SaveFileDialog();
+			pfile.DefaultExt = ".pptx";
+
+
+			var doSave = pfile.ShowDialog() ?? false;
+			if (!doSave)
+				return;
+
+			pres.SaveAs(pfile.FileName);
 
 		}
 

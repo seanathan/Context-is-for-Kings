@@ -46,7 +46,7 @@
             </FlowDocument>
         </RichTextBox>
         <Button x:Name="SearchButton" Content="Search for Images" HorizontalAlignment="Left" Margin="10,327,0,0" VerticalAlignment="Top" Width="150" Click="Button_Click"/>
-        <TextBox x:Name="debug_output" HorizontalAlignment="Left" Margin="17.5,278,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" Height="115" Width="128" Grid.Column="1"/>
+        <TextBox x:Name="debug_output" HorizontalAlignment="Left" Margin="118,327,-90,-23" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" Height="115" Width="128" Grid.Column="1"/>
         <ListBox x:Name="listBox" ScrollViewer.VerticalScrollBarVisibility="Disabled" HorizontalAlignment="Left" Height="101" Margin="345,47,0,0" VerticalAlignment="Top" Width="437" Grid.ColumnSpan="2" SelectionMode="Multiple">
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
@@ -57,6 +57,7 @@
                 </ItemsPanelTemplate>
             </ListBox.ItemsPanel>
         </ListBox>
+        <WebBrowser x:Name="preview_box" HorizontalAlignment="Left" Height="211" VerticalAlignment="Top" Width="349" Margin="358,177,0,0" Grid.ColumnSpan="2"/>
 
     </Grid>
 </Window>
